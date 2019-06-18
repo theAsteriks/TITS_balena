@@ -1,0 +1,11 @@
+requests
+pyserial
+RPi.GPIO
+cffi
+ipaddress
+six
+asn1crypto
+idna
+enum34
+cffi
+cryptography

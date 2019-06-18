@@ -7,11 +7,11 @@ COPY ./requirements.txt /requirements.txt
 # pip install python deps from requirements.txt on the resin.io build server
 #RUN sudo apt-get update -y
 
-#RUN sudo apt-get upgrade -y
+#RUN apt-get upgrade -y
 
 #RUN python -m pip install --upgrade pip
 
-sudo apt-get install gcc
+RUN sudo apt-get install gcc
 
 RUN pip install -r /requirements.txt
 

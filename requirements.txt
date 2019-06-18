@@ -7,5 +7,4 @@ six
 asn1crypto
 idna
 enum34
-cffi
 cryptography

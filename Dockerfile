@@ -9,11 +9,11 @@ COPY ./requirements.txt /requirements.txt
 
 #RUN sudo apt-get upgrade -y
 
-RUN python -m pip install --upgrade pip
+#RUN python -m pip install --upgrade pip
 
-RUN python -m pip install -r /requirements.txt
+RUN pip install -r /requirements.txt
 
-RUN python -m pip install --upgrade pip setuptools
+RUN pip install --upgrade pip setuptools
 
 RUN sudo python -m easy_install mysql-connector
 

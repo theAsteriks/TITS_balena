@@ -11,6 +11,8 @@ COPY ./requirements.txt /requirements.txt
 
 #RUN python -m pip install --upgrade pip
 
+sudo apt-get install gcc
+
 RUN pip install -r /requirements.txt
 
 RUN pip install --upgrade pip setuptools

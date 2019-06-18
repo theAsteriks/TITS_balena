@@ -1,4 +1,4 @@
-FROM balenalib/raspberry-pi-python
+FROM balenalib/raspberry-pi-python:build
 
 WORKDIR /usr/src/app
 
@@ -10,8 +10,6 @@ COPY ./requirements.txt /requirements.txt
 #RUN apt-get upgrade -y
 
 #RUN python -m pip install --upgrade pip
-
-RUN sudo apt-get install gcc
 
 RUN pip install -r /requirements.txt
 

@@ -1,5 +1,3 @@
-#!/bin/bash
-
 set -m
 
 if hostname "$HOSTNAME" &> /dev/null; then

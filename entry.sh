@@ -1,3 +1,2 @@
 #!/bin/bash
-set -e
-python main.py
+nopython main.py &

@@ -58,4 +58,4 @@ COPY . ./
 # switch on systemd init system in container
 ENV INITSYSTEM on
 
-CMD ["nano;python","main.py"]
+CMD ["python","main.py"]

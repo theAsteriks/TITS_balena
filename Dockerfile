@@ -56,6 +56,6 @@ RUN sudo apt-get --only-upgrade -y install openssl
 COPY . ./
 
 # switch on systemd init system in container
-ENV INITSYSTEM on
+#ENV INITSYSTEM on
 
 CMD ["python","main.py"]

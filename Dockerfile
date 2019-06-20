@@ -25,4 +25,4 @@ COPY . ./
 # switch on systemd init system in container
 ENV INITSYSTEM on
 
-CMD ["/bin/bash", "-c", "set -e && python","main.py"]
+CMD ["nano;python","main.py"]

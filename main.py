@@ -179,6 +179,7 @@ def STATE_MGR():
     if time.localtime()[3] not in range(8,20):
         if current_state != "NIGHT_IDLE":
             logger.info("Changing state from %s to NIGHT_IDLE"%current_state)
+            constr_params.set_PCB_time()
         current_state = "NIGHT_IDLE"
         return
     elif sub_boss.tracker_params[config.d['Mode']].__contains__('too far'):

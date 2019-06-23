@@ -2,7 +2,7 @@ import os
 
 if not os.path.exists('log_files'):
     os.makedirs('log_files')
-    
+
 os.system('find / -name \'platform.pyc\' -delete')
 
 import time
@@ -209,8 +209,9 @@ def STATE_MGR():
             logger.info("Changing state from %s to TRACKING"%current_state)
         current_state = "TRACKING"
 
-constr_params.set_PCB_time()
 set_local_time()
+constr_params.set_PCB_time()
+
 
 if sub_boss.tracer == True:
     sub_boss.set_wind_factor()

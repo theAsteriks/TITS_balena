@@ -7,6 +7,7 @@ import time
 import logging
 import ctypes
 import csv
+import math
 
 id = config.RPI_ID()
 #id = 1
@@ -318,7 +319,17 @@ class GlobalVarMGR(object):
         self.tracker_params['avg_wind_speed2'] = round(sum/len(self.wind_speed_array2),2)
 
 def set_PCB_time():
-    t = time.gmtime()
+    # calculating the equation of time - offset from GMT
+    # source - https://en.wikipedia.org/wiki/Equation_of_time#Alternative_calculation
+    yday = time.gmtime()[7]
+    W = 2*math.pi/365.25
+    A = W*(yday+9)
+    B = A + 1.914*math.pi*math.sin(W*(yday-3))/180
+    C = (A - math.atan(math.tan(B)/math.cos(23.44*math.pi/180)))/math.pi
+    EoT = 43200*(C-round(C,0))
+    now = time.time()+EoT+4*60*config.LOCAL_LON
+
+    t = time.gmtime(now)
     UART.send_write_command(config.d["Seconds"],str(t[5]))
     time.sleep(0.5)
     UART.send_write_command(config.d["Minutes"],str(t[4]))

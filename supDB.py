@@ -117,3 +117,30 @@ def update_rpi_status(status):
     finally:
         cursor.close()
         cnx.close()
+
+def db_freeze_flag():
+    cnx = db_connect()
+    if type(cnx) is dict:
+        return cnx
+    query = ("SELECT freeze FROM {} WHERE "
+    "mirror_ID = %s;".format(db_status_table))
+    cursor = cnx.cursor()
+    return_value = dict()
+    try:
+        cursor.execute(query,(id,))
+        for (freeze) in cursor:
+            if int(str(freeze)):
+                return_value['freeze'] = True
+            else:
+                return_value['freeze'] = False
+            return_value['ERROR'] = None
+            return return_value
+    except connector.Error as err:
+        logger.exception(err)
+        return_value['ERROR'] = 'YES'
+        return_value['TYPE'] = 'DB_ERROR'
+        return_value['INFO'] = err.msg
+        return return_value
+    finally:
+        cursor.close()
+        cnx.close()

@@ -128,12 +128,13 @@ def IO_MGR():
     global wind_poll_counter
     global ok_status
 
-    if sub_boss.tracer == True:
-        sub_boss.poll_tracker(max_wind_poll_counter)
-        sub_boss.update_wind_ok(max_wind_poll_counter)
-    else:
-        if io_counter % 5 == 0:
+    if not sub_boss.freeze:
+        if sub_boss.tracer == True:
             sub_boss.poll_tracker(max_wind_poll_counter)
+            sub_boss.update_wind_ok(max_wind_poll_counter)
+        else:
+            if io_counter % 5 == 0:
+                sub_boss.poll_tracker(max_wind_poll_counter)
 
     if io_counter == config.POLLING_INTERVAL:
         sub_boss.poll_server()

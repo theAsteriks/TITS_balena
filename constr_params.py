@@ -35,6 +35,7 @@ class GlobalVarMGR(object):
         for key in config.SERVER_PARAMS:
             self.server_params[key] = ''
         self.tracer = config.IS_WIND_TRACER(id)
+        self.freeze = False
         self.timings = {
             'last_http_req':time.time(),
             'last_db_update':time.time(),
@@ -289,6 +290,10 @@ class GlobalVarMGR(object):
                         logger.critical("tracer DB_FAILURE for more than %d secs"\
                         %(2*time_limit))
                         self.bools['db_updated'] = False
+        success = supDB.db_freeze_flag()
+        if success['ERROR'] == None:
+            self.freeze = success['freeze']
+
     def reset_wifi(self):
     	if time.time() - self.timings['last_wifi_reset'] > config.WIFI_RESET_TIMER:
             librf = ctypes.cdll.LoadLibrary("./librf/rf_state32.so")

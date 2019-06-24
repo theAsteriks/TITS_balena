@@ -129,6 +129,7 @@ def db_freeze_flag():
     try:
         cursor.execute(query,(id,))
         for (freeze) in cursor:
+            print freeze
             if int(str(freeze)):
                 return_value['freeze'] = True
             else:

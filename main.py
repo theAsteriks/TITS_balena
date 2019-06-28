@@ -91,31 +91,39 @@ def MAIN_FSM():
     print current_state
     if current_state == "NIGHT_IDLE":
         if sub_boss.tracker_params[config.d['Mode']] != 'tracking disabled':
+            print "to night idle"
             sub_boss.send_to_idle()
         time.sleep(config.NIGHT_SLEEP_TIME)
         return
     elif current_state == "WIND_IDLE":
         if sub_boss.tracker_params[config.d['Mode']] != 'tracking disabled':
+            print "to wind idle"
             sub_boss.send_to_idle()
     elif current_state == "ADMIN_IDLE":
         if sub_boss.tracker_params[config.d['Mode']] != 'tracking disabled':
+            print "to admin idle"
             sub_boss.send_to_idle()
         return
     elif current_state == "USER_IDLE":
         if sub_boss.tracker_params[config.d['Mode']] != 'tracking disabled':
+            print "to admin idle"
             sub_boss.send_to_idle()
         return
     elif current_state == "EMERGENCY":
         if sub_boss.tracker_params[config.d['Mode']] != 'tracking disabled':
+            print "to emergency idle"
             sub_boss.send_to_idle()
         return
 
     elif current_state == "TRACKING":
         if sub_boss.tracker_params[config.d['Mode']] != 'tracking enabled':
+            print "activate tracker"
             sub_boss.tracker_activate()
+        print "update motors"
         sub_boss.tracker_update_motors()
         return
     else:
+        print "state = admin idle"
         current_state = "ADMIN_IDLE"
         return
 
@@ -131,16 +139,22 @@ def IO_MGR():
     if not sub_boss.freeze:
     	print 'polling'
         if sub_boss.tracer == True:
+            print "tracer polling tracker"
             sub_boss.poll_tracker(max_wind_poll_counter)
+            print "tracer update wind_ok"
             sub_boss.update_wind_ok(max_wind_poll_counter)
         else:
             if io_counter % 5 == 0:
+                print "notracer poll tracker"
                 sub_boss.poll_tracker(max_wind_poll_counter)
 
     if io_counter == config.POLLING_INTERVAL:
+        print "poll server"
         sub_boss.poll_server()
+        print "update temp"
         sub_boss.update_cpu_temp()
         if sub_boss.tracer == False:
+            print "nontracer update db"
             sub_boss.db_update(current_state,max_wind_poll_counter)
         inst_status = True
         for each in sub_boss.bools.itervalues():
@@ -149,12 +163,15 @@ def IO_MGR():
                 break
         ok_status = inst_status
         if ok_status == True:
+            print "update rpi status"
             supDB.update_rpi_status(current_state)
 
     if wind_poll_counter >= max_wind_poll_counter:
         if sub_boss.tracer == True:
+            print "tracer update db"
             sub_boss.db_update(current_state,max_wind_poll_counter)
         else:
+            print "nontracer update wind_ok"
             sub_boss.update_wind_ok(max_wind_poll_counter)
 
     if io_counter >= config.POLLING_INTERVAL:

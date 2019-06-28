@@ -129,6 +129,7 @@ def IO_MGR():
     global ok_status
 
     if not sub_boss.freeze:
+    	print 'polling'
         if sub_boss.tracer == True:
             sub_boss.poll_tracker(max_wind_poll_counter)
             sub_boss.update_wind_ok(max_wind_poll_counter)

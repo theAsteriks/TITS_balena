@@ -27,6 +27,7 @@ def init_UART():
     try:
         channel = serial.Serial(port, baud, bytesize, parity, stopbits, read_timeout, xonxoff)
         logger.debug("Successfully created a serial port")
+        print "created UART connection"
         return channel
     except serial.SerialException as e:
         logger.exception(e)

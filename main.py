@@ -225,5 +225,6 @@ while True:
     IO_MGR()
     STATE_MGR()
     MAIN_FSM()
+    print sub_boss.freeze
 
-    time.sleep(1)
+time.sleep(1)

@@ -223,9 +223,11 @@ sub_boss.clear_tracker_errors()
 
 while True:
 
+    print "IO_MGR"
     IO_MGR()
+    print "STATE_MGR"
     STATE_MGR()
+    print "MAIN_FSM"
     MAIN_FSM()
     print sub_boss.freeze
-
-time.sleep(1)
+    time.sleep(1)

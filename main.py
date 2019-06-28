@@ -89,6 +89,8 @@ def MAIN_FSM():
     global sub_boss
 
     print current_state
+    print sub_boss.tracker_params[config.d['Mode']]
+    
     if current_state == "NIGHT_IDLE":
         if sub_boss.tracker_params[config.d['Mode']] != 'tracking disabled':
             print "to night idle"
@@ -135,9 +137,11 @@ def IO_MGR():
     global max_wind_poll_counter
     global wind_poll_counter
     global ok_status
-
+    
+    print io_counter
+    print wind_poll_counter
+    
     if not sub_boss.freeze:
-    	print 'polling'
         if sub_boss.tracer == True:
             print "tracer polling tracker"
             sub_boss.poll_tracker(max_wind_poll_counter)

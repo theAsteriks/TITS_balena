@@ -88,7 +88,7 @@ def MAIN_FSM():
     global current_state
     global sub_boss
 
-
+    print current_state
     if current_state == "NIGHT_IDLE":
         if sub_boss.tracker_params[config.d['Mode']] != 'tracking disabled':
             sub_boss.send_to_idle()

@@ -118,7 +118,7 @@ def MAIN_FSM():
         return
 
     elif current_state == "TRACKING":
-        if sub_boss.tracker_params[config.d['Mode']] != 'tracking enabled':
+        if sub_boss.tracker_params[config.d['Mode']] != 'tracking ok':
             print "activate tracker"
             sub_boss.tracker_activate()
         print "update motors"

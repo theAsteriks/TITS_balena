@@ -194,22 +194,17 @@ class GlobalVarMGR(object):
         currentV = self.tracker_params[config.d['Target_Default_V']]
         targetH = self.server_params['target_position_H']
         targetV = self.server_params['target_position_V']
+        try:
+            currentH = float(currentH)
+            currentV = float(currentV)
+            targetH = float(targetH)
+            targetV = float(targetV)
+        except Exception as err:
+            logger.exception(err)
         if currentH != targetH:
-            successH = UART.send_write_command(config.d['Target_Default_H'],targetH)
+            UART.send_write_command(config.d['Target_Default_H'],targetH)
         if currentV != targetV:
-            successV = UART.send_write_command(config.d['Target_Default_V'],targetV)
-        if successH['ERROR'] == None and successV['ERROR'] == None:
-            self.timings['last_tracker_update'] = time.time()
-            self.bools['tracker_updated'] = True
-        else:
-            if time.time() - self.timings['last_tracker_update'] > \
-            config.MAX_UART_DOWN_TIME:
-                if self.bools['tracker_updated'] == True:
-                    supDB.update_rpi_status('RS458 write failure')
-                    logger.warn("RS485 write failure for more than %d seconds"\
-                    %config.MAX_UART_DOWN_TIME)
-                self.bools['tracker_updated'] = 'False'
-            ##action on failing to update the tracking target
+            UART.send_write_command(config.d['Target_Default_V'],targetV)
 
     def tracker_activate(self):
         success = UART.send_write_command(config.d['Mode'],'y')

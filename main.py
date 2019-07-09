@@ -251,4 +251,4 @@ while True:
     print "MAIN_FSM"
     MAIN_FSM()
     print sub_boss.freeze
-    time.sleep(1)
+    time.sleep(5)

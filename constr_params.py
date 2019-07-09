@@ -195,15 +195,15 @@ class GlobalVarMGR(object):
         targetH = self.server_params['target_position_H']
         targetV = self.server_params['target_position_V']
         try:
-            currentH = float(currentH)
-            currentV = float(currentV)
-            targetH = float(targetH)
-            targetV = float(targetV)
+            currentH_test = float(currentH)
+            currentV_test = float(currentV)
+            targetH_test = float(targetH)
+            targetV_test = float(targetV)
         except Exception as err:
-            logger.exception(err)
-        if currentH != targetH:
-            UART.send_write_command(config.d['Target_Default_H'],targetH)
-        if currentV != targetV:
+            logger.warn("CurrentH %s,CurrentV %s,tagrgetH %s,targetV %s"%(currentH,currentV,targetH,targetV))
+        if currentH_test != targetH_test:
+            UART.send_write_command(config.d['Target_Default_H'],targetH) #send targetH and targetV back as strings!!!!
+        if currentV_test != targetV_test:
             UART.send_write_command(config.d['Target_Default_V'],targetV)
 
     def tracker_activate(self):

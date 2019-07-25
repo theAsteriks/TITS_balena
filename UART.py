@@ -16,21 +16,21 @@ xonxoff = False
 id = config.RPI_ID()
 #id = 1
 
-logger = logging.getLogger(__name__)
-logger.setLevel(config.UART_LOG_LEVEL)
-formatter = logging.Formatter('%(name)s:%(levelname)s:%(asctime)s:%(message)s')
-file_handler = logging.FileHandler('log_files/UART.log')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+#logger = logging.getLogger(__name__)
+#logger.setLevel(config.UART_LOG_LEVEL)
+#formatter = logging.Formatter('%(name)s:%(levelname)s:%(asctime)s:%(message)s')
+#file_handler = logging.FileHandler('log_files/UART.log')
+#file_handler.setFormatter(formatter)
+#logger.addHandler(file_handler)
 
 def init_UART():
     try:
         channel = serial.Serial(port, baud, bytesize, parity, stopbits, read_timeout, xonxoff)
-        logger.debug("Successfully created a serial port")
+        #logger.debug("Successfully created a serial port")
         print "created UART connection"
         return channel
     except serial.SerialException as e:
-        logger.exception(e)
+        #logger.exception(e)
         error_dict = dict()
         error_dict['ERROR'] = 'YES'
         error_dict['TYPE'] = 'PYSERIAL'
@@ -79,13 +79,13 @@ def is_valid_msg(msg):
     if len(msg) < 4:
         return False
     if msg[0] != id:
-        logger.debug("Invalid machinID %d in a UART response, local ID is %d"%(msg[0],id))
+        #logger.debug("Invalid machinID %d in a UART response, local ID is %d"%(msg[0],id))
         return False
     header = msg[0:len(msg)-2]
     crc = msg[len(msg)-2:len(msg)]
     #### THE real CRC check:
     if crc != CRC_GEN(header):
-        logger.warn("INVALID CRC message")
+        #logger.warn("INVALID CRC message")
         return False
     return True
 
@@ -125,7 +125,7 @@ def send_write_command(bin, value):
         sent_back = RS485_read(tunnel)
         pins_close()
     except Exception as e:
-        logger.exception(e)
+        #logger.exception(e)
         error_dict = dict()
         error_dict['ERROR'] = 'YES'
         error_dict['TYPE'] = 'PYSERIAL'
@@ -136,8 +136,8 @@ def send_write_command(bin, value):
     if sent == len(command) and sent_back[0:2] == bytearray([id,0x20]):
         return {'ERROR':None}
     else:
-        logger.error("Invalid response of a write command")
-        logger.warn("sent %s - received %s"%(command,sent_back))
+        #logger.error("Invalid response of a write command")
+        #logger.warn("sent %s - received %s"%(command,sent_back))
         return {
         'ERROR':'YES',
         'TYPE':'PYSERIAL',
@@ -161,7 +161,7 @@ def poll_tracker_params():
             parsed = parse_msg(response)
             params.update(parsed)
         except Exception as e:
-            logger.info(e)
+            #logger.info(e)
             params['ERROR'] = 'YES'
             params['TYPE'] = 'PYSERIAL'
             params['INFO'] = e
@@ -172,7 +172,7 @@ def poll_tracker_params():
         tunnel.close()
     pins_close()
     if len(params) < 50:
-        logger.info("Unusually short message of %d characters"%len(params))
+        #logger.info("Unusually short message of %d characters"%len(params))
         params['ERROR'] = 'YES'
         params['TYPE'] = 'PYSERIAL'
         params['INFO'] = 'TOO_SHORT'

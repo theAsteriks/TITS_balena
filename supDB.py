@@ -14,22 +14,22 @@ id = config.RPI_ID()
 
 tracer_id = config.WIND_TRACER_ID()
 
-logger = logging.getLogger(__name__)
-logger.setLevel(config.DB_LOG_LEVEL)
-formatter = logging.Formatter('%(name)s:%(levelname)s:%(asctime)s:%(message)s')
-file_handler = logging.FileHandler('log_files/supDB.log')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+#logger = logging.getLogger(__name__)
+#logger.setLevel(config.DB_LOG_LEVEL)
+#formatter = logging.Formatter('%(name)s:%(levelname)s:%(asctime)s:%(message)s')
+#file_handler = logging.FileHandler('log_files/supDB.log')
+#file_handler.setFormatter(formatter)
+#logger.addHandler(file_handler)
 
 
 def db_connect():
     try:
         cnx = connector.connect(user = db_user, password = db_pass,
         host = db_host, database = db_database)
-        logger.debug(repr(cnx))
+        #logger.debug(repr(cnx))
         return cnx
     except connector.Error as e:
-        logger.warning("Unable to connect to DB")
+        #logger.warning("Unable to connect to DB")
         error_response = dict()
         error_response['ERROR'] = 'YES'
         error_response['TYPE'] = 'DB_ERROR'
@@ -63,7 +63,7 @@ def db_update(new_values):
         return_value['ERROR'] = None
         return return_value
     except connector.Error as err:
-        logger.exception(err)
+        #logger.exception(err)
         return_value['ERROR'] = 'YES'
         return_value['TYPE'] = 'DB_ERROR'
         return_value['INFO'] = err.msg
@@ -92,7 +92,7 @@ def db_wind_poll():
             return_value['ERROR'] = None
             return return_value
     except connector.Error as err:
-        logger.exception(err)
+        #logger.exception(err)
         return_value['ERROR'] = 'YES'
         return_value['TYPE'] = 'DB_ERROR'
         return_value['INFO'] = err.msg
@@ -113,7 +113,8 @@ def update_rpi_status(status):
         cursor.execute(query,(status,time.asctime(),id))
         cnx.commit()
     except Exception as e:
-        logger.exception(e)
+        #logger.exception(e)
+        pass
     finally:
         cursor.close()
         cnx.close()
@@ -136,7 +137,7 @@ def db_freeze_flag():
             return_value['ERROR'] = None
             return return_value
     except connector.Error as err:
-        logger.exception(err)
+        #logger.exception(err)
         return_value['ERROR'] = 'YES'
         return_value['TYPE'] = 'DB_ERROR'
         return_value['INFO'] = err.msg

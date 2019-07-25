@@ -9,12 +9,12 @@ id = config.RPI_ID()
 #id = 1
 polling_url = config.POLLING_URL
 
-logger = logging.getLogger(__name__)
-logger.setLevel(config.HTTP_LOG_LEVEL)
-formatter = logging.Formatter('%(name)s:%(levelname)s:%(asctime)s:%(message)s')
-file_handler = logging.FileHandler('log_files/httpReq.log')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+#logger = logging.getLogger(__name__)
+#logger.setLevel(config.HTTP_LOG_LEVEL)
+#formatter = logging.Formatter('%(name)s:%(levelname)s:%(asctime)s:%(message)s')
+#file_handler = logging.FileHandler('log_files/httpReq.log')
+#file_handler.setFormatter(formatter)
+#logger.addHandler(file_handler)
 
 
 def poll_server_params():
@@ -24,7 +24,7 @@ def poll_server_params():
             response = requests.get(polling_url, timeout = 5)
             break
         except Exception as e:
-            logger.debug("%i timeouts as of now"%i)
+            #logger.debug("%i timeouts as of now"%i)
             if i == 4:
                 i += 1
     if i > 4:
@@ -33,17 +33,17 @@ def poll_server_params():
         error_dict['TYPE'] = 'HTTPREQ'
         error_dict['INFO'] = '5 TIMEOUTS'
         return error_dict
-    logger.debug("status code of the response %d"%response.status_code)
+    #logger.debug("status code of the response %d"%response.status_code)
     if response.status_code != requests.codes.ok:
         error_dict = dict()
         error_dict['ERROR'] = 'YES'
         error_dict['TYPE'] = 'HTTPREQ'
         error_dict['INFO'] = 'BAD_REQUEST'
-        logger.warn("HTTP status code was %i"%response.status_code)
+        #logger.warn("HTTP status code was %i"%response.status_code)
         return error_dict
 
     if response.text == '0 results':
-        logger.warn("Zero results reponse")
+        #logger.warn("Zero results reponse")
         response = dict()
         response['availability'] = 'NO'
         response['ERROR'] = None
@@ -51,7 +51,7 @@ def poll_server_params():
     else:
         json_array = json.loads(response.text)
         response = dict()
-        logger.debug("NR of results->%i"%len(json_array))
+        #logger.debug("NR of results->%i"%len(json_array))
         for each in json_array:
             try:
                 if int(each['mirror_ID']) == id:
@@ -68,20 +68,21 @@ def poll_server_params():
                             response['ERROR'] = None
                             return response
                         else:
-                            logger.error("No target position for mirror ID "+str(id))
+                            #logger.error("No target position for mirror ID "+str(id))
                             response['ERROR'] = 'YES'
                             response['TYPE'] = 'HTTPREQ'
                             response['INFO'] = 'TARGET_HV_MISMATCH'
                             return response
                     else:
-                        logger.error("Mismatch of server time and local time")
+                        #logger.error("Mismatch of server time and local time")
                         response['ERROR'] = 'YES'
                         response['TYPE'] = 'HTTPREQ'
                         response['INFO'] = 'SERVER_TIME_MISMATCH'
                         return response
             except Exception as e:
-                logger.warning("Unable to convert server response to JSON->%s"%str(json_array))
-        logger.error("No coordinates for mirror_ID %d"%id)
+                #logger.warning("Unable to convert server response to JSON->%s"%str(json_array))
+                pass
+        #logger.error("No coordinates for mirror_ID %d"%id)
         response['ERROR'] = 'YES'
         response['INFO'] = 'LACK_LOCAL_ID'
         response['TYPE'] = 'HTTPREQ'

@@ -13,19 +13,19 @@ import constr_params
 import supDB
 import logging
 
-logger = logging.getLogger(__name__)
-logger.setLevel(config.MAIN_LOG_LEVEL)
-formatter = logging.Formatter('%(name)s:%(levelname)s:%(asctime)s:%(message)s')
-file_handler = logging.FileHandler('log_files/main.log')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+#logger = logging.getLogger(__name__)
+#logger.setLevel(config.MAIN_LOG_LEVEL)
+#formatter = logging.Formatter('%(name)s:%(levelname)s:%(asctime)s:%(message)s')
+#file_handler = logging.FileHandler('log_files/main.log')
+#file_handler.setFormatter(formatter)
+#logger.addHandler(file_handler)
 
 
 ##########################################################################
 #################### GLOBAL VARIABLES ####################################
 id = config.RPI_ID()
 sub_boss = constr_params.GlobalVarMGR()
-logger.debug("Initiated global variable holder")
+#logger.debug("Initiated global variable holder")
 wind_tracer = config.IS_WIND_TRACER(id)
 io_counter = config.POLLING_INTERVAL
 current_state = "ADMIN_IDLE"
@@ -40,7 +40,7 @@ ok_status = True
 def set_local_time():
     os.environ['TZ'] = 'Europe/Brussels'
     time.tzset()
-    logger.debug("Set the timezone to Brussels' timezone")
+    #logger.debug("Set the timezone to Brussels' timezone")
 
 ##############################################################################
 
@@ -80,7 +80,8 @@ def update_wind_counter_limit():
                 max_wind_poll_counter = config.MAX_NO_WIND_DETECTION/3**(3-i)
                 break
     except Exception as e:
-        logger.exception(e)
+        #logger.exception(e)
+        pass
 
 
 
@@ -201,7 +202,7 @@ def STATE_MGR():
 
     if time.localtime()[3] not in range(8,20):
         if current_state != "NIGHT_IDLE":
-            logger.info("Changing state from %s to NIGHT_IDLE"%current_state)
+            #logger.info("Changing state from %s to NIGHT_IDLE"%current_state)
             constr_params.set_PCB_time()
         current_state = "NIGHT_IDLE"
         return
@@ -210,27 +211,32 @@ def STATE_MGR():
         return
     elif sub_boss.tracker_params['wind_ok'] == 'NO':
         if current_state != "WIND_IDLE":
-            logger.info("Changing state from %s to WIND_IDLE"%current_state)
+            #logger.info("Changing state from %s to WIND_IDLE"%current_state)
+            pass
         current_state = "WIND_IDLE"
         return
     elif sub_boss.server_params['admin_slot_on'] == 'NO':
         if current_state != "ADMIN_IDLE":
-            logger.info("Changing state from %s to ADMIN_IDLE"%current_state)
+            #logger.info("Changing state from %s to ADMIN_IDLE"%current_state)
+            pass
         current_state = "ADMIN_IDLE"
         return
     elif sub_boss.server_params['availability'] == 'NO':
         if current_state != "USER_IDLE":
-            logger.info("Changing state from %s to USER_IDLE"%current_state)
+            #logger.info("Changing state from %s to USER_IDLE"%current_state)
+            pass
         current_state = "USER_IDLE"
         return
     elif ok_status == False:
         if current_state != "EMERGENCY":
-            logger.info("Changing state from %s to EMERGENCY"%current_state)
+            #logger.info("Changing state from %s to EMERGENCY"%current_state)
+            pass
         current_state = "EMERGENCY"
         return
     else:
         if current_state != "TRACKING":
-            logger.info("Changing state from %s to TRACKING"%current_state)
+            #logger.info("Changing state from %s to TRACKING"%current_state)
+            pass
         current_state = "TRACKING"
 
 set_local_time()

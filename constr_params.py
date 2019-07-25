@@ -12,12 +12,12 @@ import math
 id = config.RPI_ID()
 #id = 1
 
-logger = logging.getLogger(__name__)
-logger.setLevel(config.CONSTR_PARAMS_LOG_LEVEL)
-formatter = logging.Formatter('%(name)s:%(levelname)s:%(asctime)s:%(message)s')
-file_handler = logging.FileHandler('log_files/constr_params.log')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+#logger = logging.getLogger(__name__)
+#logger.setLevel(config.CONSTR_PARAMS_LOG_LEVEL)
+#formatter = logging.Formatter('%(name)s:%(levelname)s:%(asctime)s:%(message)s')
+#file_handler = logging.FileHandler('log_files/constr_params.log')
+#file_handler.setFormatter(formatter)
+#logger.addHandler(file_handler)
 
 def update_existing_keys(dictionary, new_dictionary):
     for key in new_dictionary.iterkeys():
@@ -102,13 +102,13 @@ class GlobalVarMGR(object):
                 if interm['ERROR'] == None:
                     if self.bools['wind_polled'] == True:
                         supDB.update_rpi_status('Tracer DB_inactivity')
-                        logger.warn("The tracer hasn't updated the db "
-                        "for more than %d seconds"%(2*time_limit))
+                        #logger.warn("The tracer hasn't updated the db "
+                        #"for more than %d seconds"%(2*time_limit))
                     self.bools['wind_polled'] = False
                     self.tracker_params['wind_ok'] = 'NO'
                 else:
-                    if self.bools['wind_polled'] == True:
-                        logger.warn("DB down for more than %d sec"%(2*time_limit))
+                #    if self.bools['wind_polled'] == True:
+                #        logger.warn("DB down for more than %d sec"%(2*time_limit))
                     self.bools['wind_polled'] = False
                     ##action on no wind detection
         else:
@@ -118,7 +118,8 @@ class GlobalVarMGR(object):
                 speed_now = float(self.tracker_params[config.d['WindSpeed']])
                 speed_avg = float(self.tracker_params['avg_wind_speed'])
             except Exception as err:
-                logger.exception(err)
+                #logger.exception(err)
+                pass
 
             if speed_now > config.MAX_INST_WIND_SPEED or speed_avg > \
             config.MAX_AVG_WIND_SPEED or self.bools['tracker_polled'] == False:
@@ -131,8 +132,8 @@ class GlobalVarMGR(object):
             else:
                 if time.time() - self.timings['last_wind_poll'] > \
                 2*time_limit:
-                    if self.bools['wind_polled'] == True:
-                        logger.warn("No wind detection for more than %d sec"%(2*time_limit))
+                    #if self.bools['wind_polled'] == True:
+                    #    logger.warn("No wind detection for more than %d sec"%(2*time_limit))
                     self.bools['wind_polled'] = False
                     #action on no wind detection
 
@@ -141,13 +142,14 @@ class GlobalVarMGR(object):
             tempfile = open(config.CPU_TEMP_PATH,'r')
             temp = float(tempfile.readline())/1000
             self.tracker_params['cpu_temp'] = str(temp)
-            if time.localtime()[4] % 10 == 0:
-                logger.info("%2.1fC core temp"%temp)
+            #if time.localtime()[4] % 10 == 0:
+            #    logger.info("%2.1fC core temp"%temp)
             if temp > config.CPU_MAX_TEMP:
-                logger.critical("Exceeding max cpu temperature, currently %fC"%temp)
+                #logger.critical("Exceeding max cpu temperature, currently %fC"%temp)
                 time.sleep(config.OVERTEMP_SLEEP_TIME)
         except Exception as err:
-            logger.exception(err)
+            #logger.exception(err)
+            pass
         finally:
             tempfile.close()
 
@@ -160,7 +162,7 @@ class GlobalVarMGR(object):
         else:
             if time.time() - self.timings['last_http_req'] > config.MAX_SERVERDOWN_TIME:
                 if self.bools['http_polled'] == True:
-                    logger.warn("Server is inactive for more than %d seconds"%config.MAX_SERVERDOWN_TIME)
+                    #logger.warn("Server is inactive for more than %d seconds"%config.MAX_SERVERDOWN_TIME)
                     supDB.update_rpi_status("server_down")
                 self.bools['http_polled'] = False
                 ###actions on server/internet failure
@@ -178,14 +180,14 @@ class GlobalVarMGR(object):
                 if time.time() - self.timings['last_tracker_poll'] > time_limit:
                     if self.bools['tracker_polled'] == True:
                         supDB.update_rpi_status('tracer RS458 read failure')
-                        logger.warn("tracer failed to poll the tracker for more than %d sec"%time_limit)
+                        #logger.warn("tracer failed to poll the tracker for more than %d sec"%time_limit)
                     self.bools['tracker_polled'] = False
             else:
                 if time.time() - self.timings['last_tracker_poll'] > config.MAX_UART_DOWN_TIME:
                     if self.bools['tracker_polled'] == True:
                         supDB.update_rpi_status('RS458 read failure')
-                        logger.critical("RS485 read failure for more than %d seconds"\
-                        %config.MAX_UART_DOWN_TIME)
+                        #logger.critical("RS485 read failure for more than %d seconds"\
+                        #%config.MAX_UART_DOWN_TIME)
                     self.bools['tracker_polled'] = False
                 ## actions on RS458 read failure
 
@@ -200,7 +202,8 @@ class GlobalVarMGR(object):
             targetH_test = float(targetH)
             targetV_test = float(targetV)
         except Exception as err:
-            logger.warn("CurrentH %s,CurrentV %s,tagrgetH %s,targetV %s"%(currentH,currentV,targetH,targetV))
+            #logger.warn("CurrentH %s,CurrentV %s,tagrgetH %s,targetV %s"%(currentH,currentV,targetH,targetV))
+            pass
         if currentH_test != targetH_test:
             UART.send_write_command(config.d['Target_Default_H'],targetH) #send targetH and targetV back as strings!!!!
         if currentV_test != targetV_test:
@@ -216,8 +219,8 @@ class GlobalVarMGR(object):
             config.MAX_UART_DOWN_TIME:
                 if self.bools['tracker_updated'] == True:
                     supDB.update_rpi_status('RS458 write failure')
-                    logger.warn("RS485 write failure for more than %d seconds"\
-                    %config.MAX_UART_DOWN_TIME)
+                    #logger.warn("RS485 write failure for more than %d seconds"\
+                    #%config.MAX_UART_DOWN_TIME)
                 self.bools['tracker_updated'] = 'False'
 
     def send_to_idle(self):
@@ -233,8 +236,8 @@ class GlobalVarMGR(object):
         else:
             if time.time() - self.timings['last_tracker_update'] > config.MAX_UART_DOWN_TIME:
                 if self.bools['tracker_updated'] == True:
-                    logger.warn("RS485 write failure for more than %d seconds"\
-                    %config.MAX_UART_DOWN_TIME)
+                    #logger.warn("RS485 write failure for more than %d seconds"\
+                    #%config.MAX_UART_DOWN_TIME)
                     supDB.update_rpi_status('RS458 write failure')
                 self.bools['tracker_updated'] = 'False'
     def clear_tracker_errors(self):
@@ -245,8 +248,8 @@ class GlobalVarMGR(object):
         else:
             if time.time() - self.timings['last_tracker_update'] > config.MAX_UART_DOWN_TIME:
                 if self.bools['tracker_updated'] == True:
-                    logger.warn("RS485 write failure for more than %d seconds"\
-                    %config.MAX_UART_DOWN_TIME)
+                    #logger.warn("RS485 write failure for more than %d seconds"\
+                    #%config.MAX_UART_DOWN_TIME)
                     supDB.update_rpi_status('RS458 write failure')
                 self.bools['tracker_updated'] = 'False'
 
@@ -259,8 +262,8 @@ class GlobalVarMGR(object):
         else:
             if time.time() - self.timings['last_tracker_update'] > config.MAX_UART_DOWN_TIME:
                 if self.bools['tracker_updated'] == True:
-                    logger.warn("RS485 write failure for more than %d seconds"\
-                    %config.MAX_UART_DOWN_TIME)
+                    #logger.warn("RS485 write failure for more than %d seconds"\
+                    #%config.MAX_UART_DOWN_TIME)
                     supDB.update_rpi_status('RS458 write failure')
                 self.bools['tracker_updated'] = 'False'
 
@@ -276,14 +279,14 @@ class GlobalVarMGR(object):
                 if time.time() - self.timings['last_db_update'] > \
                 config.MAX_DB_DOWN_TIME:
                     if self.bools['db_updated'] == True:
-                        logger.warn("DB update failure for more than %d seconds"\
-                        %config.MAX_DB_DOWN_TIME)
+                        #logger.warn("DB update failure for more than %d seconds"\
+                        #%config.MAX_DB_DOWN_TIME)
                         self.bools['db_updated'] = False
             else:
                 if time.time() - self.timings['last_db_update'] > (2*time_limit):
                     if self.bools['db_updated'] == True:
-                        logger.critical("tracer DB_FAILURE for more than %d secs"\
-                        %(2*time_limit))
+                        #logger.critical("tracer DB_FAILURE for more than %d secs"\
+                        #%(2*time_limit))
                         self.bools['db_updated'] = False
         success = supDB.db_freeze_flag()
         if success['ERROR'] == None:
@@ -302,7 +305,8 @@ class GlobalVarMGR(object):
         try:
             inst_wind_speed += float(self.tracker_params[config.d['WindSpeed']])
         except Exception as e:
-            logger.exception(e)
+            #logger.exception(e)
+            pass
         if len(self.wind_speed_array) >= config.MAX_WIND_ARRAY_LENGTH:
             self.wind_speed_array.pop()
         if len(self.wind_speed_array2) >= 2*config.MAX_WIND_ARRAY_LENGTH:
